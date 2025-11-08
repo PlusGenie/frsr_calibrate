@@ -1,0 +1,64 @@
+# ============================================================================
+#  FRSR v2.1 — Calibration configuration (CALIBRATION-ONLY)
+#  • This file contains ONLY the dials used during calibration and optional scans.
+#  • Cosmological anchors (H0, Ωb0, Ωcdm0, Ωr0, Ωk0) are defined in frsr.default.toml.
+#  • Runtime/export (CLASS/MontePython, CPL outputs) are handled by code, not here.
+#  • Single source of truth for CPL mapping: map_kernel_to_cpl() in frsr.core.frsr_background
+# ============================================================================
+
+# -----------------------------
+# FRSR model (calibration dials)
+# -----------------------------
+[frsr.model]
+# Choose ONE kernel via `kernel = "exp"` or `kernel = "power2"`.
+# Physics dials (kept in sync with frsr_v2.1.md):
+#
+# • POWER-LAW kernel with β fixed ("power2")
+#     - s0: turnover scale (dimensionless, in a-units).
+#           With β=2 locked by design in v2.1, yields ΔH²/H0² ∝ 1/(1 + s0·a).
+#     - β: power-law index (FIXED to 2 in v2.1; documented in the paper, not configurable here).
+#
+# • EXP kernel ("exp")
+#     - xi (ξ): macro decay timescale (dimensionless, in a-units).
+#               Yields ΔH²/H0² ∝ 1/(1 + xi·a). Larger xi → slower late-time decay.
+#     - sc (s_c): OPTIONAL micro-coherence filter scale in 𝔈(s)=exp(−s/sc).
+#                 Set sc=0.0 to disable. Applies to EXP **only**.
+#
+# Runtime policy (v2.1):
+#   Calibration may use "exp" OR "power2", but the runtime cosmology path is CPL-only.
+#   (w0, wa) are derived via map_kernel_to_cpl() and written to frsr_background.ini by exporters.
+kernel = "power2"
+s0     = 1.0   # POWER2 ONLY (ignored unless kernel="power2"); turnover (a-scale)
+xi     = 1.0   # EXP ONLY (ignored unless kernel="exp"); macro decay (a-scale)
+sc     = 0.0   # EXP ONLY (ignored unless kernel="exp"); micro-coherence; 0=off
+
+# -----------------------------------
+# Calibration helpers (algorithmic)
+# -----------------------------------
+# These are algorithm hyperparameters for calibration procedures (not cosmological physics).
+[frsr.calibration]
+auto_kIR   = true
+E0_target  = 0.10
+N          = 6
+r          = 2.5
+alpha_band = 0.10
+beta       = 5.5
+q_cap      = 0.90
+
+# -----------------------------
+# Optional scan plan (small!)
+# -----------------------------
+[frsr.scan]
+# Keep grids tight to avoid large Cartesian products during exploratory runs.
+N      = [6, 7]
+r      = [2.3, 2.5, 2.7]
+alpha  = [0.05, 0.10]
+beta   = [5.0, 5.5, 6.0]
+
+# -----------------------------
+# Notes
+# -----------------------------
+# - Anchors are taken from frsr.default.toml (do not duplicate here).
+# - Exporters (frsr_export_cpl.py / frsr_make_class_background.py) compute Ω_fld, w0_fld, wa_fld and
+#   write CLASS .ini; they call map_kernel_to_cpl() for the CPL pair.
+# - No w(a) tables are used; runtime is CPL → CLASS. The spectral kernel exists only to produce the slope L.

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "frsr_calibrate"
+version = "0.1.0"
+description = "Finite Residual Sum Rule (FRSR) calibration and CLASS bridge toolkit"
+authors = [{ name = "Sangwook Lee", email = "sw.lee@plusgenie.com" }]
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.11",
+  "loguru>=0.7",
+  "sympy>=1.12",
+  "python-dotenv>=1.0",
+  "pydantic>=2.6",
+  "pydantic-settings>=2.2",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+# Expose the CLIs you actually use:
+frsr-calibrate = "frsr.cli.run_calibrate:main"
+frsr-gen-wtable = "frsr.core.frsr_make_w_table:main"
+frsr-make-ini = "frsr.io.fsrb_backgroun:main"
+
+[project.optional-dependencies]
+# Keep plotting optional to avoid pulling it when not needed
+plot = ["matplotlib>=3.8"]

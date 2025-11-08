@@ -1,0 +1,54 @@
+# Omega_de0 will be computed (Ω_FRSR,0); leave None / omit
+# ============================================================================
+#  FRSR v2.1 — Single-source defaults (TOML)
+#  This file is read by frsr.io.frsr_loader and CLI tools.
+#  All I/O uses frsr.utils.log (Loguru) for consistent logging.
+#  NOTE: Calibration/scan parameters have moved to frsr.calibration.toml.
+# ============================================================================
+
+# -----------------------------
+# Cosmological anchors (today)
+# -----------------------------
+[frsr.anchors]
+H0_km_s_Mpc = 67.4
+Omega_b0    = 0.048
+Omega_cdm0  = 0.262
+Omega_r0    = 8.4e-5
+Omega_k0    = 0.0          # set non-zero only if class.background.Omega_k0_policy="free"
+
+# -----------------------------
+# FRSR model (calibration dials only; CPL is derived post-calibration)
+# -----------------------------
+[frsr.model]
+# --- Spectral kernel knobs (calibration dials only) ---
+# Choose ONE kernel via `kernel = "exp"` or `kernel = "power2"`.
+# CPL parameters (w0, wa, cs2) are **not** specified here; they are produced by
+# frsr_calibrate and written into frsr_background.ini after calibration.
+#
+# Kernel parameters (kept in sync with frsr_v2.1.md):
+# • POWER2: s0  — turnover scale (dimensionless, a-units); ΔH²/H0² ∝ 1/(1 + s0·a)
+# • EXP   : xi  — macro decay (dimensionless, a-units);
+#           sc  — OPTIONAL micro-coherence filter for 𝔈(s)=exp(−s/sc); set 0 to disable
+# Runtime policy (v2.1): calibration may use "exp" OR "power2"; runtime cosmology is CPL-only.
+# The CPL pair (w0, wa) is derived via map_kernel_to_cpl and exported to CLASS.
+kernel = "power2"
+s0     = 1.0   # POWER2 ONLY (ignored unless kernel="power2"); turnover (a-scale)
+xi     = 1.0   # EXP ONLY (ignored unless kernel="exp"); macro decay (a-scale)
+sc     = 0.0   # EXP ONLY (ignored unless kernel="exp"); micro-coherence; 0=off
+
+
+
+#[class.background]
+Omega_k0_policy = "flat"   # "flat" forces Ω_k0=0 in exports; "free" uses frsr.anchors.Omega_k0
+use_ppf         = true
+cs2_fld         = 1.0      # Smooth DE fluid for CLASS; keep 1.0 unless testing perturbation variants
+
+
+
+# -----------------------------
+# Notes
+# -----------------------------
+# - w(a) tables are NOT used (no `use_tabulated_w`, no `w_table_file`).
+# - Runtime path is CPL → CLASS: (w0, wa, cs2) are derived by frsr_calibrate and written to frsr_background.ini.
+# - Spectral kernels (EXP/POWER2) exist **only** to produce the slope L used by the CPL map.
+# - Calibration and scan grids now live in frsr.calibration.toml.
