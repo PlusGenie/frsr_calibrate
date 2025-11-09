@@ -13,9 +13,8 @@ It intentionally avoids heavy pipeline logic so you can:
 - **FRSR v1 (concept & master equation)** — Zenodo DOI: [10.5281/zenodo.17393804](https://doi.org/10.5281/zenodo.17393804)
   *(Sang Wook Lee, 2025)*
 - **FRSR v2.0 — Curvature Dynamics from a Spectrally-Constrained Quantum Entanglement Field**  
-*Sang Wook Lee (2025)* — Zenodo DOI: [Pending publication](https://zenodo.org/)
+*Sang Wook Lee (2025)* — Zenodo DOI: [10.5281/zenodo.17563295](https://doi.org/10.5281/zenodo.17563295)
 
-> In v2.0/2.1 we treat the late‑time effect as **time curvature** mapped to CPL (w₀, wₐ). Calibration can use a spectral kernel, but runtime is CPL‑only (keeps CLASS and MP simple).
 
 ---
 
