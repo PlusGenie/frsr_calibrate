@@ -15,6 +15,10 @@ It intentionally avoids heavy pipeline logic so you can:
 - **FRSR v2.0 — Curvature Dynamics from a Spectrally-Constrained Quantum Entanglement Field**  
 *Sang Wook Lee (2025)* — Zenodo DOI: [10.5281/zenodo.17563295](https://doi.org/10.5281/zenodo.17563295)
 
+## PDF Documents
+You can view or download the official documentation PDFs here:
+- [FRSR v1.0 Final PDF](docs/frsr_v1.0_final.pdf)
+- [FRSR v2.0 Final PDF](docs/frsr_v2.0_final.pdf)
 
 ---
 
